@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #ffffff;
+  color: #333;
+  max-width: 400px;
+  margin: 40px auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+fieldset {
+  border: 5px solid #ede6e6;
+  padding: 20px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+legend {
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 0 10px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border: 1.5px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #5a9df9;
+  outline: none;
+  box-shadow: 0 0 6px #5a9df9aa;
+}
+
+button[type="submit"] {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  background-color: #5a9df9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #3c7be0;
+}
+
+.error {
+  margin-top: 12px;
+  color: #d93025;
+  font-weight: 600;
+  min-height: 20px;
+}

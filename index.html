@@ -1,136 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Selector</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        header {
-            background-color: #1f1f1f;
-            width: 100%;
-            padding: 20px 0;
-            text-align: center;
-            font-size: 2em;
-            font-weight: bold;
-            border-bottom: 2px solid #333;
-        }
-
-        .game-container {
-            display: flex;
-            flex-wrap: wrap;
-            text-align: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 40px 0;
-            padding: 0 20px;
-        }
-
-        .game-card {
-            background-color: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 16px;
-            width: 220px;
-            height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s ease, background-color 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .game-card:hover {
-            transform: scale(1.05) rotate(1deg);
-            background-color: #2a2a2a;
-        }
-
-        .game-card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .game-text {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-        }
-
-        .game-text a {
-            color: #61dafb;
-            text-decoration: none;
-            font-size: 1.2em;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .game-text p {
-            font-size: 0.9em;
-            color: #ccc;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .game-card {
-                width: 90%;
-            }
-        }
-        .game-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.game-link:hover .game-card {
-    transform: scale(1.05);
-    background-color: #2a2a2a;
-}
-    </style>
+  <meta charset="utf-8">
+  <title>My Login Page</title>
+  <link rel="stylesheet" href="loginstylesheet.css">
 </head>
 <body>
 
-    <header>
-        🎮 Choose a Game
-    </header>
+<h2>Login Page</h2>
 
-<div class="game-container">
-    <a href="flappybird.html" class="game-link">
-        <div class="game-card">
-            <img src="flappybird.png" alt="Flappy Bird">
-            <div class="game-text">
-                <h3>Flappy Bird</h3>
-                <p>Tap to fly and avoid pipes!</p>
-            </div>
-        </div>
-    </a>
+<form action="./formSuccess.html" target="_blank" onsubmit="return validatePasswords()">
+  <fieldset>
+    <legend>Login Information</legend>
+    <p>Enter your login information below:</p>
 
-    <a href="game.html" class="game-link">
-        <div class="game-card">
-            <img src="image.png" alt="Snake">
-            <div class="game-text">
-                <h3>Snake</h3>
-                <p>Eat apples, grow longer, avoid yourself!</p>
-            </div>
-        </div>
-    </a>
-</div>
+    <label for="user">User Name:</label>
+    <input type="text" id="user" name="user" maxlength="10" required>
 
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+    <button type="submit">Register</button>
+
+    <div class="error" id="errorMessage"></div>
+  </fieldset>
+</form>
+
+<script>
+function validatePasswords() {
+  const pass = document.getElementById('password').value;
+  const confirm = document.getElementById('confirmPassword').value;
+  const errorMessage = document.getElementById('errorMessage');
+
+  if (pass !== confirm) {
+    errorMessage.textContent = "Passwords do not match!";
+    return false;
+  }
+
+  errorMessage.textContent = "";
+  return true;
+}
+</script>
 
 </body>
 </html>
