@@ -1,27 +1,47 @@
 body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  background-color: #ffffff;
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
   color: #333;
-  max-width: 400px;
-  margin: 40px auto;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 h2 {
+  font-family: 'Fredoka', sans-serif;
   text-align: center;
-  margin-bottom: 30px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-page {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  max-width: 900px;
+  width: 100%;
+}
+
+.login-form-container {
+  flex: 1;
+  padding: 40px;
 }
 
 fieldset {
-  border: 5px solid #ede6e6;
+  border: 2px solid #8e2de2;
   padding: 20px;
-  border-radius: 6px;
-  background: #fff;
+  border-radius: 8px;
+  background: #f4f2ff;
 }
 
 legend {
-  font-weight: bold;
+  font-family: 'Fredoka', sans-serif;
   font-size: 1.2rem;
+  color: #6a11cb;
   padding: 0 10px;
 }
 
@@ -29,6 +49,12 @@ label {
   display: block;
   margin-top: 15px;
   font-weight: 600;
+  color: #444;
+}
+
+label i {
+  margin-right: 6px;
+  color: #6a11cb;
 }
 
 input[type="text"],
@@ -38,36 +64,36 @@ input[type="password"] {
   padding: 10px;
   margin-top: 6px;
   border: 1.5px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 1rem;
   box-sizing: border-box;
+  background-color: #fff;
   transition: border-color 0.3s ease;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-  border-color: #5a9df9;
+input:focus {
+  border-color: #6a11cb;
   outline: none;
-  box-shadow: 0 0 6px #5a9df9aa;
+  box-shadow: 0 0 6px #6a11cb66;
 }
 
 button[type="submit"] {
   width: 100%;
   margin-top: 25px;
   padding: 12px;
-  background-color: #5a9df9;
+  background-color: #6a11cb;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1.1rem;
   font-weight: bold;
+  font-family: 'Fredoka', sans-serif;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 button[type="submit"]:hover {
-  background-color: #3c7be0;
+  background-color: #4a00e0;
 }
 
 .error {
@@ -75,4 +101,19 @@ button[type="submit"]:hover {
   color: #d93025;
   font-weight: 600;
   min-height: 20px;
+}
+
+.login-image {
+  flex: 1;
+  background: #eae5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-image img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  padding: 20px;
 }
