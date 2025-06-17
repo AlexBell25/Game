@@ -16,8 +16,9 @@ h2 {
   margin-bottom: 20px;
 }
 
-.login-page {
+.signup-page {
   display: flex;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -26,9 +27,11 @@ h2 {
   width: 100%;
 }
 
-.login-form-container {
+.signup-form-container {
   flex: 1;
   padding: 40px;
+  min-width: 300px;
+  box-sizing: border-box;
 }
 
 fieldset {
@@ -103,17 +106,31 @@ button[type="submit"]:hover {
   min-height: 20px;
 }
 
-.login-image {
+.signup-image {
   flex: 1;
   background: #eae5ff;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 300px;
+  box-sizing: border-box;
 }
 
-.login-image img {
+.signup-image img {
   max-width: 100%;
   height: auto;
   object-fit: contain;
   padding: 20px;
+}
+
+/* Optional: Make layout stack on mobile */
+@media (max-width: 768px) {
+  .signup-page {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .signup-image {
+    order: -1; /* Show image on top on smaller screens */
+  }
 }
