@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+    #usernameDisplay {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    #snakeHighScore, #flappyHighScore {
+      margin-top: 1rem;
+      font-size: 1.3rem;
+    }
+    a {
+      display: inline-block;
+      margin-top: 2rem;
+      text-decoration: none;
+      background: #444;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      margin: 0 10px;
+    }
+    a:hover {
+      background: #666;
+    }
+    button {
+      margin-top: 20px;
+      font-size: 1rem;
+      padding: 10px 20px;
+      border-radius: 5px;
+      background: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>User Profile</h1>
+
+  <div id="usernameDisplay">Username: </div>
+  <div id="snakeHighScore">Snake High Score: 0</div>
+  <div id="flappyHighScore">Flappy Bird High Score: 0</div>
+
+  <a href="game.html">Play Snake</a>
+  <a href="flappybird.html">Play Flappy Bird</a>
+  <br>
+  <button onclick="updateScores()">🔄 Refresh Scores</button>
+  <button onclick="goBack('index.html')" style="position:absolute; top:10px; left:10px;">🔙 Back</button>
+
+  <script>
+    let username = null;
+
+    function updateScores() {
+      if (!username) return;
+      const snakeScore = localStorage.getItem(`snakeHighScore_${username}`) || 0;
+      const flappyScore = localStorage.getItem(`flappyHighScore_${username}`) || 0; // <-- Fixed key here
+      document.getElementById("snakeHighScore").textContent = `Snake High Score: ${snakeScore}`;
+      document.getElementById("flappyHighScore").textContent = `Flappy Bird High Score: ${flappyScore}`;
+    }
+
+    function goBack(url) {
+      window.location.href = url;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      username = localStorage.getItem("loggedInUser");
+      if (!username) {
+        alert("No user logged in! Please login first.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      document.getElementById("usernameDisplay").textContent = `Username: ${username}`;
+      updateScores();
+    });
+  </script>
+
+</body>
+</html>

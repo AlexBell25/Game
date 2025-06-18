@@ -81,18 +81,19 @@
       return true;
     }
 
-    function handleRegistration(event) {
-      event.preventDefault();
+function handleRegistration(event) {
+  event.preventDefault();
 
-      if (!validatePasswords()) return false;
+  if (!validatePasswords()) return false;
 
-      const username = document.getElementById("user").value;
-      localStorage.setItem("loggedInUser", username);
+  const username = document.getElementById("user").value;
+  localStorage.setItem("loggedInUser", username);
 
-      // Redirect to gameSelector.html
-      window.location.href = "./gameSelector.html";
-      return false;
-    }
+  // Redirect to gameSelector.html
+  window.location.href = "./gameSelector.html";
+  return false;
+}
+
 
     function goToLogin() {
       window.location.href = "login.html"; // Create this page if needed
@@ -124,6 +125,10 @@
     }
 
     document.addEventListener("DOMContentLoaded", updateNavbar);
+    function goBack(url) {
+    window.location.href = url;
+}
   </script>
+  <button onclick="goBack('index.html')" style="position:absolute; top:10px; left:10px;">🔙 Back</button>
 </body>
 </html>
