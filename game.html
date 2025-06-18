@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Snake game</title>
+  <title>Snake Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     canvas {
@@ -29,11 +29,16 @@
     }
   </style>
 </head>
+<body>
+
 <h1>Snake Game</h1>
 <h2 id="scoreDisplay">Score: 0</h2>
+<h3 id="highScoreDisplay">High Score: 0</h3>
+
 <canvas id="gameCanvas" width="400" height="400"></canvas>
-<button = onclick = "startGame()" id = "startButton" style = "display:inline-block">Start</button>
-<button onclick="restartGame()" id="restartButton" style="display: none;">Restart</button>
+
+<button onclick="startGame()" id="startButton" style="display:inline-block">Start</button>
+<button onclick="restartGame()" id="restartButton" style="display:none;">Restart</button>
 
 <script>
 const canvas = document.getElementById("gameCanvas");
@@ -46,8 +51,32 @@ let snake = [{x: 10, y: 10}];
 let food = {x: 5, y: 5};
 let dx = 1, dy = 0;
 let score = 0;
+let highScore = 0;
 let gameInterval;
 let changingDirection = false;
+
+// Get username from localStorage or default "guest"
+let username = localStorage.getItem("loggedInUser") || "guest";
+const scoreDisplay = document.getElementById("scoreDisplay");
+const highScoreDisplay = document.getElementById("highScoreDisplay");
+
+// Load high score for current user
+function loadHighScore() {
+  const saved = localStorage.getItem(`snakeHighScore_${username}`);
+  highScore = saved ? parseInt(saved, 10) : 0;
+  highScoreDisplay.textContent = `High Score: ${highScore}`;
+}
+
+function saveHighScore(currentScore) {
+  if (!username) return; // Ensure user is logged in
+
+  const currentHighScore = parseInt(localStorage.getItem(`snakeHighScore_${username}`)) || 0;
+  if (currentScore > currentHighScore) {
+    localStorage.setItem(`snakeHighScore_${username}`, currentScore);
+    highScore = currentScore;
+    highScoreDisplay.textContent = `High Score: ${highScore}`;
+  }
+}
 
 function startGame() {
   snake = [{x: 10, y: 10}];
@@ -55,8 +84,10 @@ function startGame() {
   score = 0;
   food = randomFood();
   document.getElementById("startButton").style.display = "none";
-  document.getElementById("scoreDisplay").innerText = "Score: 0";
   document.getElementById("restartButton").style.display = "none";
+  scoreDisplay.textContent = "Score: 0";
+
+  loadHighScore();  // Load high score when game starts
   clearInterval(gameInterval);
   gameInterval = setInterval(updateGame, 100);
 }
@@ -90,7 +121,7 @@ function updateGame() {
   // Check food collision
   if (head.x === food.x && head.y === food.y) {
     score++;
-    document.getElementById("scoreDisplay").innerText = "Score: " + score;
+    scoreDisplay.textContent = "Score: " + score;
     food = randomFood();
   } else {
     snake.pop();
@@ -98,6 +129,7 @@ function updateGame() {
 
   drawGame();
 }
+
 function drawEyes(head) {
   const eyeSize = 3;
   const offset = 4;
@@ -157,6 +189,7 @@ function randomFood() {
 
 function endGame() {
   clearInterval(gameInterval);
+  saveHighScore(score);  // Pass current score here!
   document.getElementById("restartButton").style.display = "inline-block";
 }
 
@@ -183,11 +216,14 @@ document.addEventListener("keydown", function(e) {
       break;
   }
 });
+
 // Go back button
-function goBack() {
-    window.history.back();
+function goBack(url) {
+    window.location.href = url;
 }
 </script>
-<button onclick="goBack()" style="position:absolute; top:10px; left:10px;">🔙 Back</button>
+
+<button onclick="goBack('index.html')" style="position:absolute; top:10px; left:10px;">🔙 Back</button>
+
 </body>
 </html>
