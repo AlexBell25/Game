@@ -38,6 +38,36 @@
         <img src="image.png" />
       </div>
     </section>
+    <script>
+  function goToProfile() {
+    window.location.href = "profile.html"; // You can change to any profile page
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    location.reload(); // Reload to update navbar
+  }
+
+  function updateNavbarButtons() {
+    const username = localStorage.getItem("loggedInUser");
+    const buttonsContainer = document.querySelector(".buttons");
+
+    if (username) {
+      buttonsContainer.innerHTML = `
+        <a href="#" onclick="goToProfile()">Profile</a>
+        <a href="#" onclick="logout()">Logout</a>
+      `;
+    } else {
+      buttonsContainer.innerHTML = `
+        <a href="login.html" class="signin">Sign In</a>
+        <a href="signup.html" class="signup">Sign Up</a>
+      `;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", updateNavbarButtons);
+</script>
+
   </body>
 </html>
 <style>

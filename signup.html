@@ -8,12 +8,37 @@
   <link rel="stylesheet" href="loginstylesheet.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <style>
+    /* Minimal styling for nav */
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 15px 30px;
+      background-color: #222;
+    }
+
+    nav button {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
+
+  <!-- Sign-up Page -->
   <div class="signup-page">
     <div class="signup-form-container">
-      <h2>AMEA gaming</h2>
-      <form action="./gameSelector.html" target="_blank" onsubmit="return validatePasswords()">
+      <h2>AMEA Gaming</h2>
+      <form onsubmit="return handleRegistration(event)">
         <fieldset>
           <legend><i class="fas fa-gamepad"></i> SIGN UP</legend>
 
@@ -30,7 +55,7 @@
           <input type="password" id="confirmPassword" name="confirmPassword" required />
 
           <button type="submit">Register</button>
-          <div class="error" id="errorMessage"></div>
+          <div class="error" id="errorMessage" style="color: red; margin-top: 10px;"></div>
         </fieldset>
       </form>
     </div>
@@ -40,20 +65,65 @@
     </div>
   </div>
 
+  <!-- JavaScript -->
   <script>
     function validatePasswords() {
       const pass = document.getElementById("password").value;
       const confirm = document.getElementById("confirmPassword").value;
-      const errorMessage = document.getElementById("errorMessage");
+      const errorDiv = document.getElementById("errorMessage");
 
       if (pass !== confirm) {
-        errorMessage.textContent = "Passwords do not match!";
+        errorDiv.textContent = "Passwords do not match.";
         return false;
       }
 
-      errorMessage.textContent = "";
+      errorDiv.textContent = "";
       return true;
     }
+
+    function handleRegistration(event) {
+      event.preventDefault();
+
+      if (!validatePasswords()) return false;
+
+      const username = document.getElementById("user").value;
+      localStorage.setItem("loggedInUser", username);
+
+      // Redirect to gameSelector.html
+      window.location.href = "./gameSelector.html";
+      return false;
+    }
+
+    function goToLogin() {
+      window.location.href = "login.html"; // Create this page if needed
+    }
+
+    function goToSignup() {
+      window.location.href = "signup.html"; // Optional
+    }
+
+    function goToProfile() {
+      window.location.href = "profile.html"; // Create a profile page if needed
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      location.reload();
+    }
+
+    function updateNavbar() {
+      const user = localStorage.getItem("loggedInUser");
+      const nav = document.getElementById("navbar");
+
+      if (user) {
+        nav.innerHTML = `
+          <button onclick="goToProfile()">Profile</button>
+          <button onclick="logout()">Logout</button>
+        `;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", updateNavbar);
   </script>
 </body>
 </html>
