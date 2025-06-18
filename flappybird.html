@@ -2,32 +2,64 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Flappy bird</title>
+<title>Flappy Bird with User High Scores</title>
 <style>
-canvas {
-    border: 1px solid #000000;
+  body {
+    margin: 0;
+    background-color: #70c5ce;
+    font-family: Arial, sans-serif;
+    color: white;
+    text-align: center;
+  }
+  canvas {
+    border: 1px solid #000;
     background-image: url("background.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-}
+    display: block;
+    margin: 20px auto;
+  }
+  #scoreDisplay {
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    margin: 10px;
+  }
+  button:hover {
+    background-color: #555;
+  }
 </style>
 </head>
-<body onload="startGame()">
+<body>
+
+<h1>Flappy Bird</h1>
+<div id="scoreDisplay">Score: 0 | High Score: 0 | Player: guest</div>
 
 <script>
+// Get logged-in username or default to "guest"
+let loggedInUser = localStorage.getItem("loggedInUser") || "guest";
+
 let myGamePiece;
 let myObstacles = [];
 let myScore;
 let score = 0;
-
 let upPressed = false;
-let downPressed = false;
 
 function startGame() {
     myGamePiece = new component(25, 25, "yellow", 10, 120); 
     myScore = new component("30px", "Consolas", "yellow", 280, 40, "text");
     score = 0;
+    myObstacles = [];
+    updateScoreDisplay();
     myGameArea.start();
 }
 
@@ -35,27 +67,25 @@ function restartGame() {
     const button = document.getElementById("restartButton");
     if (button) button.remove();
 
-    // Remove old canvas
     if (document.body.contains(myGameArea.canvas)) {
         document.body.removeChild(myGameArea.canvas);
     }
 
     myObstacles = [];
     upPressed = false;
-    downPressed = false;
-
     startGame();
+    updateScoreDisplay();
 }
 
 const myGameArea = {
     canvas: document.createElement("canvas"),
     start : function() {
-        this.canvas.width = window.innerWidth;
+        this.canvas.width = window.innerWidth > 480 ? 480 : window.innerWidth;
         this.canvas.height = 480;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.body.insertBefore(this.canvas, document.getElementById("scoreDisplay").nextSibling);
         this.frameNo = 0;
-        this.interval = setInterval(updateGameArea, 10);
+        this.interval = setInterval(updateGameArea, 20);
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -111,26 +141,30 @@ function updateGameArea() {
     // Movement
     myGamePiece.speedY = upPressed ? -8.0 : 2.0;
 
-    // Collision
+    // Collision with obstacles
     for (let i = 0; i < myObstacles.length; i++) {
         if (myGamePiece.crashWith(myObstacles[i])) {
+            saveHighScore(score);
             showRestartButton();
             myGameArea.stop();
+            updateScoreDisplay();
             return;
         }
     }
 
-    // Boundary collision
+    // Boundary collision (top and bottom)
     if (myGamePiece.y < 0 || myGamePiece.y + myGamePiece.height > myGameArea.canvas.height) {
+        saveHighScore(score);
         showRestartButton();
         myGameArea.stop();
+        updateScoreDisplay();
         return;
     }
 
     myGameArea.clear();
     myGameArea.frameNo += 1;
 
-    // Create obstacles
+    // Create obstacles every 60 frames (~1.2 sec)
     if (myGameArea.frameNo === 1 || everyinterval(60)) {
         x = myGameArea.canvas.width;
         minHeight = 20;
@@ -148,7 +182,7 @@ function updateGameArea() {
         myObstacles.push(topObstacle, bottomObstacle);
     }
 
-    // Move/update obstacles and check score
+    // Move and draw obstacles, check score when player passes them
     for (let i = 0; i < myObstacles.length; i += 2) {
         const top = myObstacles[i];
         const bottom = myObstacles[i + 1];
@@ -157,27 +191,43 @@ function updateGameArea() {
         top.newPos(); bottom.newPos();
         top.update(); bottom.update();
 
-        // Score if passed
         if (!top.isScored && top.x + top.width < myGamePiece.x) {
             top.isScored = true;
             score += 1;
+            updateScoreDisplay();
         }
     }
 
-    // Update score
+    // Update and draw score text
     myScore.text = "SCORE: " + score;
     myScore.update();
 
-    // Move player
+    // Move and draw the player
     myGamePiece.newPos();    
     myGamePiece.update();
 }
 
 function everyinterval(n) {
-    return (myGameArea.frameNo / n) % 1 === 0;
+    return (myGameArea.frameNo % n) === 0;
 }
 
-// Key events
+// Save high score per logged-in user
+function saveHighScore(currentScore) {
+    const key = `flappyHighScore_${loggedInUser}`;
+    const savedHighScore = parseInt(localStorage.getItem(key)) || 0;
+    if (currentScore > savedHighScore) {
+        localStorage.setItem(key, currentScore);
+    }
+}
+
+// Update score display including username and user-specific high score
+function updateScoreDisplay() {
+    const highScore = localStorage.getItem(`flappyHighScore_${loggedInUser}`) || 0;
+    document.getElementById("scoreDisplay").textContent = 
+      `Score: ${score} | High Score: ${highScore} | Player: ${loggedInUser}`;
+}
+
+// Keyboard controls: space bar for flap
 document.addEventListener("keydown", function(event) {
     if (event.code === "Space") upPressed = true;
 });
@@ -185,13 +235,15 @@ document.addEventListener("keyup", function(event) {
     if (event.code === "Space") upPressed = false;
 });
 
-// Show restart button
+// Show restart button on game over
 function showRestartButton() {
+    if(document.getElementById("restartButton")) return; // avoid duplicates
+
     const button = document.createElement("button");
-    button.id = "restartButton"
+    button.id = "restartButton";
     button.textContent = "Restart";
-    button.style.position = "absolute";
-    button.style.top = "30%";
+    button.style.position = "fixed";
+    button.style.top = "40%";
     button.style.left = "50%";
     button.style.transform = "translate(-50%, -50%)";
     button.style.padding = "15px 30px";
@@ -208,16 +260,24 @@ function showRestartButton() {
 }
 
 // Go back button
-function goBack() {
-    window.history.back();
+function goBack(url) {
+    window.location.href = url;
 }
+
+// Initialize username display on page load
+document.addEventListener("DOMContentLoaded", () => {
+    updateScoreDisplay();
+});
+
+// Start the game automatically on load
+window.onload = startGame;
 </script>
 
-<button onclick="goBack()" style="position:absolute; top:10px; left:10px;">🔙 Back</button>
+<button onclick="goBack('index.html')" style="position:absolute; top:10px; left:10px;">🔙 Back</button>
 
-<h1 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; text-align: center; color:white; background-color: rgb(71, 71, 71);">
-    Score increases when you pass obstacle gaps. Survive as long as you can! Press "Restart" after crashing.
-</h1>
+<h2 style="color:white; margin-top: 20px; max-width: 400px; margin-left:auto; margin-right:auto;">
+Score increases when you pass obstacle gaps. Press SPACE to flap!
+</h2>
 
 </body>
 </html>
